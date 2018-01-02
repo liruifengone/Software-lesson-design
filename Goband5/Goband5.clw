@@ -50,8 +50,7 @@ Control4=IDOK,button,1342373889
 [DLG:IDD_GOBAND5_DIALOG]
 Type=1
 Class=CGoband5Dlg
-ControlCount=3
+ControlCount=2
 Control1=IDBack,button,1342242816
 Control2=IDCANCEL,button,1342242816
-Control3=IDC_STATIC,static,1342177287
 

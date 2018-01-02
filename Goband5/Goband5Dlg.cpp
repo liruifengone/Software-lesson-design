@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "Goband5.h"
 #include "Goband5Dlg.h"
+//#include "cv.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -131,6 +132,8 @@ BOOL CGoband5Dlg::OnInitDialog()
 	count = 0;
 	blackNum = 0;
 	whiteNum = 0;
+
+	//MessageBox("五子棋，采用五局三胜制度");
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -180,59 +183,76 @@ void CGoband5Dlg::OnPaint()
 		CRect WhiteRect;
 		CRect BlackFrac;
 		CRect WhiteFrac;
+		CRect PromptText;
 
 		BlackRect.SetRect(640,10,790,90);
 		WhiteRect.SetRect(640,90,790,170);
 		BlackFrac.SetRect(790,10,940,90);
 		WhiteFrac.SetRect(790,90,940,170);
+		PromptText.SetRect(640,170,940,530);
 		GetClientRect(&rect);
+
+		
 
 		CDC blackBMP;
 		CDC whiteBMP;
 		CDC BlackFracBMP;
 		CDC WhiteFracBMP;
 		CDC dcBMP;
+		CDC PromptBMP;
 
 		dcBMP.CreateCompatibleDC(&dc);
 		blackBMP.CreateCompatibleDC(&dc);
 		whiteBMP.CreateCompatibleDC(&dc);
 		BlackFracBMP.CreateCompatibleDC(&dc);
 		WhiteFracBMP.CreateCompatibleDC(&dc);
+		PromptBMP.CreateCompatibleDC(&dc);
 
 		CBitmap bmpBackground;
 		CBitmap whiteback;
 		CBitmap blackback;
 		CBitmap blackfracback;
 		CBitmap whitefracback;
+		CBitmap promptback;
 
 		bmpBackground.LoadBitmap(IDB_BITMAP2);
 		blackback.LoadBitmap(IDB_BITMAP5);
-	//	whiteback.LoadBitmap();
+		whiteback.LoadBitmap(IDB_BITMAP7);
 	//	blackfracback.LoadBitmap();
 	//	whitefracback.LoadBitmap();
+		promptback.LoadBitmap(IDB_BITMAP11);
 	
 	
 		
 		BITMAP m_bitmap;
-//		BITMAP m_white;
+		BITMAP m_white;
 		BITMAP m_black;
 	//	BITMAP m_whitefrac;
-//		BITMAP m_blackfrac;
+    //	BITMAP m_blackfrac;
+		BITMAP m_prompt;
 
 		bmpBackground.GetBitmap(&m_bitmap);
-	//	whiteback.GetBitmap(&m_white);
+		whiteback.GetBitmap(&m_white);
 		blackback.GetBitmap(&m_black);
 	//	blackfracback.GetBitmap(m_blackfrac);
 	//	whitefracback.GetBitmap(m_whitefrac);
+		promptback.GetBitmap(&m_prompt);
 
 		CBitmap *pbmpOld = dcBMP.SelectObject(&bmpBackground);
 		CBitmap *pbblack = blackBMP.SelectObject(&blackback);
 		CBitmap *pbwhite = whiteBMP.SelectObject(&whiteback);
 		CBitmap *pbwhitefrac = WhiteFracBMP.SelectObject(&whitefracback);
 		CBitmap *pbblackfrac = BlackFracBMP.SelectObject(&blackfracback);
+		CBitmap *pbprompt = PromptBMP.SelectObject(&promptback);
 
 		dc.StretchBlt(0,0,rect.Width(),rect.Height(),&dcBMP,0,0,m_bitmap.bmWidth,m_bitmap.bmHeight,SRCCOPY);
-	//	dc.StretchBlt(0,0,BlackRect.Width(),BlackRect.Height(),&blackBMP,0,0,m_black.bmWidth,m_black.bmHeight,SRCCOPY);
+		dc.StretchBlt(640,10,BlackRect.Width(),BlackRect.Height(),&blackBMP,0,0,m_black.bmWidth,m_black.bmHeight,SRCCOPY);
+		dc.StretchBlt(640,90,WhiteRect.Width(),WhiteRect.Height(),&whiteBMP,0,0,m_white.bmWidth,m_black.bmHeight,SRCCOPY);
+		dc.StretchBlt(640,170,PromptText.Width(),PromptText.Height(),&PromptBMP,0,0,m_prompt.bmWidth,m_prompt.bmHeight,SRCCOPY);
+
+	
+	
+		//	dc.StretchBlt(BlackRect.TopLeft().x,WhiteRect.TopLeft().y,WhiteRect.Width(),WhiteRect.Height(),&blackBMP,0,0,m_black.bmWidth,m_black.bmHeight,SRCCOPY);　
 		//画格子
 		dc.MoveTo(10,10);
 		dc.LineTo(10,610);
@@ -323,7 +343,7 @@ void CGoband5Dlg::OnLButtonDown(UINT nFlags, CPoint point)
 					Invalidate();
 					if(checkWin(i,j))
 					{
-						int answer = MessageBox("本局比赛黑方胜利,白方是否想要悔棋","战果",MB_YESNOCANCEL);
+						/*int answer = MessageBox("本局比赛黑方胜利,白方是否想要悔棋","战果",MB_YESNOCANCEL);
 						if (answer == IDOK)
 						{
 							if (rank[1][0]!=0 && rank[1][1]!=0)
@@ -335,14 +355,16 @@ void CGoband5Dlg::OnLButtonDown(UINT nFlags, CPoint point)
 							}
 							Invalidate();
 						}else if(answer == IDNO)
-						{
-							if (MessageBox("本局比赛结束，是否要再来一局","系统消息",MB_YESNOCANCEL) == IDOK)
+						{*/
+							if (MessageBox("本局比赛黑方胜利，是否要再来一局","系统消息",MB_YESNOCANCEL) == IDYES)
 							{
-								
 								InitBoard();
+								blackNum++;
+								Invalidate();
+
 							}
 							
-						}
+						
 					}
 				}else if (count%BLACK==WHITE)
 				{
@@ -354,7 +376,7 @@ void CGoband5Dlg::OnLButtonDown(UINT nFlags, CPoint point)
 					Invalidate();
 					if (checkWin(i,j))
 					{
-						int answer = MessageBox("本局比赛白方胜利，黑方是否想要悔棋","战果",MB_YESNOCANCEL);
+						/*int answer = MessageBox("本局比赛白方胜利，黑方是否想要悔棋","战果",MB_YESNOCANCEL);
 						if (answer == IDOK)
 						{
 							if (rank[1][0]!=0 && rank[1][1]!=0)
@@ -364,16 +386,18 @@ void CGoband5Dlg::OnLButtonDown(UINT nFlags, CPoint point)
 								rank[count][1] = 0;
 								count--;
 							}
+							InitBoard();
 							Invalidate();
 						}else if(answer == IDNO)
-						{
-							if (MessageBox("本局比赛结束，是否要再来一局","系统消息",MB_YESNOCANCEL) == IDOK)
+						*/
+							if (MessageBox("本局比赛白方胜利，是否要再来一局","系统消息",MB_YESNOCANCEL) == IDYES)
 							{
-								
 								InitBoard();
+								whiteNum++;
+								Invalidate();
 							}
 						
-						}
+						
 					}
 					
 				}
@@ -399,9 +423,12 @@ void CGoband5Dlg::OnBack()
 		if (rank[1][0]!=0 && rank[1][1]!=0)//判断是否为第一个子，避免程序崩溃
 		{
 			board[rank[count][0]][rank[count][1]] = 0;
+			board[rank[count-1][0]][rank[count-1][1]] = 0;
 			rank[count][0] = 0;
+			rank[count-1][0] = 0;
 			rank[count][1] = 0;
-			count--;
+			rank[count-1][1] = 0;
+			count-=2;
 		}
 	}else if(CHOICE == IDNO)
 	{
@@ -450,9 +477,9 @@ int CGoband5Dlg::checkWin(int x, int y)
 	//	else 
 	//		return 0;//如果左右连续相同的点加起来超过5个则函数值为1，反之为0
 		total = 1;
-		for (j = y + 1;board[x][j] == board[x][y];i++)
+		for (j = y + 1;board[x][j] == board[x][y];j++)
 			total++;
-		for (j = y - 1;board[x][j] == board[x][y];i--)
+		for (j = y - 1;board[x][j] == board[x][y];j--)
 			total++;
 		if (total >= 5)
 			return 1;//如果上下连续相同的点加起来超过5个则函数值为1
@@ -491,6 +518,5 @@ void CGoband5Dlg::InitBoard()
 			rank[i][j] = 0;
 		}
 	}							
-	count = 0;
-	Invalidate();
+	count = 0;	
 }

@@ -131,6 +131,18 @@ SOURCE=.\StdAfx.h
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
+SOURCE=".\res\)@T@3]`F~3]9I[4GFJ_J`}X.bmp"
+# End Source File
+# Begin Source File
+
+SOURCE=".\res\896W%_KSHI@RJ`QZX$0}P~.bmp"
+# End Source File
+# Begin Source File
+
+SOURCE=".\res\896W%_KSHI@RJ`QZX$0}P~E.bmp"
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\bitmap1.bmp
 # End Source File
 # Begin Source File
@@ -140,6 +152,10 @@ SOURCE=.\res\bitmap3.bmp
 # Begin Source File
 
 SOURCE=.\res\bitmap4.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bitmap8.bmp
 # End Source File
 # Begin Source File
 
@@ -160,6 +176,18 @@ SOURCE=.\res\Goband5.ico
 # Begin Source File
 
 SOURCE=.\res\Goband5.rc2
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\white.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=".\res\黑方执子.bmp"
+# End Source File
+# Begin Source File
+
+SOURCE=".\res\未标题-1.bmp"
 # End Source File
 # End Group
 # Begin Source File
