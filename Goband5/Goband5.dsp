@@ -147,7 +147,59 @@ SOURCE=.\res\bitmap1.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\bitmap18.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bitmap25.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bitmap26.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bitmap27.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bitmap28.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bitmap29.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\bitmap3.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bitmap30.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bitmap31.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bitmap32.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bitmap33.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bitmap34.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bitmap35.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bitmap36.bmp
 # End Source File
 # Begin Source File
 
@@ -179,7 +231,43 @@ SOURCE=.\res\Goband5.rc2
 # End Source File
 # Begin Source File
 
+SOURCE=".\res\QQ图片20180102231619.bmp"
+# End Source File
+# Begin Source File
+
+SOURCE=".\res\QQ图片20180104164626.bmp"
+# End Source File
+# Begin Source File
+
+SOURCE=".\res\QQ图片20180104164637.bmp"
+# End Source File
+# Begin Source File
+
+SOURCE=".\res\QQ图片20180104164647.bmp"
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\timg.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\white.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=".\res\白方5.bmp"
+# End Source File
+# Begin Source File
+
+SOURCE=".\res\黑方1.bmp"
+# End Source File
+# Begin Source File
+
+SOURCE=".\res\黑方标记.bmp"
+# End Source File
+# Begin Source File
+
+SOURCE=".\res\黑方标记2.bmp"
 # End Source File
 # Begin Source File
 
@@ -193,6 +281,10 @@ SOURCE=".\res\未标题-1.bmp"
 # Begin Source File
 
 SOURCE=.\ReadMe.txt
+# End Source File
+# Begin Source File
+
+SOURCE=".\res\关联规则算法.png"
 # End Source File
 # End Target
 # End Project

@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "Goband5.h"
 #include "Goband5Dlg.h"
+#include <string.h>
 //#include "cv.h"
 
 #ifdef _DEBUG
@@ -14,6 +15,9 @@ static char THIS_FILE[] = __FILE__;
 
 #define WHITE 1
 #define BLACK 2
+#define INITX 30
+#define INITY 30
+#define FOUR 3
 
 /////////////////////////////////////////////////////////////////////////////
 // CAboutDlg dialog used for App About
@@ -132,6 +136,9 @@ BOOL CGoband5Dlg::OnInitDialog()
 	count = 0;
 	blackNum = 0;
 	whiteNum = 0;
+	colorJudge=BLACK;
+	whiteFrac = 0;
+	blackFrac = 0;
 
 	//MessageBox("五子棋，采用五局三胜制度");
 	
@@ -176,112 +183,123 @@ void CGoband5Dlg::OnPaint()
 	}
 	else
 	{
+		
 		CPaintDC dc(this);			//设置画笔
 		//设置背景图形
 		CRect rect;
 		CRect BlackRect;
-		CRect WhiteRect;
-		CRect BlackFrac;
-		CRect WhiteFrac;
-		CRect PromptText;
+	//	CRect WhiteRect;
+	//	CRect BlackFrac;
+	//	CRect WhiteFrac;
+	//	CRect PromptText;
+		CRect BoardRect;
 
-		BlackRect.SetRect(640,10,790,90);
-		WhiteRect.SetRect(640,90,790,170);
-		BlackFrac.SetRect(790,10,940,90);
-		WhiteFrac.SetRect(790,90,940,170);
-		PromptText.SetRect(640,170,940,530);
+		BlackRect.SetRect(660,30,960,550);
+	//	WhiteRect.SetRect(660,110,810,190);
+	//	BlackFrac.SetRect(810,30,960,110);
+	//	WhiteFrac.SetRect(810,110,960,190);
+	//	PromptText.SetRect(660,190,960,550);
+		BoardRect.SetRect(20,20,640,640);
 		GetClientRect(&rect);
 
-		
+	//	BlackRect.OffsetRect();
 
 		CDC blackBMP;
-		CDC whiteBMP;
-		CDC BlackFracBMP;
-		CDC WhiteFracBMP;
+	//	CDC whiteBMP;
+	//	CDC BlackFracBMP;
+	//	CDC WhiteFracBMP;
 		CDC dcBMP;
-		CDC PromptBMP;
+	//	CDC PromptBMP;
+		CDC BoardBMP;
 
 		dcBMP.CreateCompatibleDC(&dc);
 		blackBMP.CreateCompatibleDC(&dc);
-		whiteBMP.CreateCompatibleDC(&dc);
-		BlackFracBMP.CreateCompatibleDC(&dc);
-		WhiteFracBMP.CreateCompatibleDC(&dc);
-		PromptBMP.CreateCompatibleDC(&dc);
+	//	whiteBMP.CreateCompatibleDC(&dc);
+	//	BlackFracBMP.CreateCompatibleDC(&dc);
+	//	WhiteFracBMP.CreateCompatibleDC(&dc);
+	//	PromptBMP.CreateCompatibleDC(&dc);
+		BoardBMP.CreateCompatibleDC(&dc);
 
 		CBitmap bmpBackground;
-		CBitmap whiteback;
+	//	CBitmap whiteback;
 		CBitmap blackback;
-		CBitmap blackfracback;
-		CBitmap whitefracback;
-		CBitmap promptback;
+	//	CBitmap blackfracback;
+	//	CBitmap whitefracback;
+	//	CBitmap promptback;
+		CBitmap BoardBack;
 
-		bmpBackground.LoadBitmap(IDB_BITMAP2);
-		blackback.LoadBitmap(IDB_BITMAP5);
-		whiteback.LoadBitmap(IDB_BITMAP7);
-	//	blackfracback.LoadBitmap();
-	//	whitefracback.LoadBitmap();
-		promptback.LoadBitmap(IDB_BITMAP11);
+		bmpBackground.LoadBitmap(IDB_BITMAP17);
+		blackback.LoadBitmap(IDB_BITMAP18);
+	/*	whiteback.LoadBitmap(IDB_BITMAP13);
+		blackfracback.LoadBitmap(IDB_BITMAP25+blackFrac);
+		whitefracback.LoadBitmap(IDB_BITMAP32+whiteFrac);
+	*/	BoardBack.LoadBitmap(IDB_BITMAP16);
+	//	promptback.LoadBitmap(colorJudge);
 	
 	
 		
 		BITMAP m_bitmap;
-		BITMAP m_white;
+	//	BITMAP m_white;
 		BITMAP m_black;
 	//	BITMAP m_whitefrac;
     //	BITMAP m_blackfrac;
-		BITMAP m_prompt;
+	//	BITMAP m_prompt;
+		BITMAP m_board;
 
 		bmpBackground.GetBitmap(&m_bitmap);
-		whiteback.GetBitmap(&m_white);
+	//	whiteback.GetBitmap(&m_white);
 		blackback.GetBitmap(&m_black);
-	//	blackfracback.GetBitmap(m_blackfrac);
-	//	whitefracback.GetBitmap(m_whitefrac);
-		promptback.GetBitmap(&m_prompt);
+	//	blackfracback.GetBitmap(&m_blackfrac);
+	//	whitefracback.GetBitmap(&m_whitefrac);
+	//	promptback.GetBitmap(&m_prompt);
+		BoardBack.GetBitmap(&m_board);
 
 		CBitmap *pbmpOld = dcBMP.SelectObject(&bmpBackground);
 		CBitmap *pbblack = blackBMP.SelectObject(&blackback);
-		CBitmap *pbwhite = whiteBMP.SelectObject(&whiteback);
-		CBitmap *pbwhitefrac = WhiteFracBMP.SelectObject(&whitefracback);
-		CBitmap *pbblackfrac = BlackFracBMP.SelectObject(&blackfracback);
-		CBitmap *pbprompt = PromptBMP.SelectObject(&promptback);
+	//	CBitmap *pbwhite = whiteBMP.SelectObject(&whiteback);
+	//	CBitmap *pbwhitefrac = WhiteFracBMP.SelectObject(&whitefracback);
+	//	CBitmap *pbblackfrac = BlackFracBMP.SelectObject(&blackfracback);
+	//	CBitmap *pbprompt = PromptBMP.SelectObject(&promptback);
+		CBitmap *pbBoard = BoardBMP.SelectObject(&BoardBack);
 
 		dc.StretchBlt(0,0,rect.Width(),rect.Height(),&dcBMP,0,0,m_bitmap.bmWidth,m_bitmap.bmHeight,SRCCOPY);
-		dc.StretchBlt(640,10,BlackRect.Width(),BlackRect.Height(),&blackBMP,0,0,m_black.bmWidth,m_black.bmHeight,SRCCOPY);
-		dc.StretchBlt(640,90,WhiteRect.Width(),WhiteRect.Height(),&whiteBMP,0,0,m_white.bmWidth,m_black.bmHeight,SRCCOPY);
-		dc.StretchBlt(640,170,PromptText.Width(),PromptText.Height(),&PromptBMP,0,0,m_prompt.bmWidth,m_prompt.bmHeight,SRCCOPY);
-
-	
-	
+		dc.StretchBlt(660,30,BlackRect.Width(),BlackRect.Height(),&blackBMP,0,0,m_black.bmWidth,m_black.bmHeight,SRCCOPY);
+	//	dc.StretchBlt(660,110,WhiteRect.Width(),WhiteRect.Height(),&whiteBMP,0,0,m_white.bmWidth,m_black.bmHeight,SRCCOPY);
+	//	dc.StretchBlt(660,190,PromptText.Width(),PromptText.Height(),&PromptBMP,0,0,m_prompt.bmWidth,m_prompt.bmHeight,SRCCOPY);
+	//	dc.StretchBlt(810,30,BlackFrac.Width(),BlackFrac.Height(),&BlackFracBMP,0,0,m_blackfrac.bmWidth,m_blackfrac.bmHeight,SRCCOPY);
+	//	dc.StretchBlt(810,110,WhiteFrac.Width(),WhiteFrac.Height(),&WhiteFracBMP,0,0,m_whitefrac.bmWidth,m_whitefrac.bmHeight,SRCCOPY);
+		dc.StretchBlt(20,20,BoardRect.Width(),BoardRect.Height(),&BoardBMP,0,0,m_board.bmWidth,m_board.bmHeight,SRCCOPY);
+		
 		//	dc.StretchBlt(BlackRect.TopLeft().x,WhiteRect.TopLeft().y,WhiteRect.Width(),WhiteRect.Height(),&blackBMP,0,0,m_black.bmWidth,m_black.bmHeight,SRCCOPY);　
 		//画格子
-		dc.MoveTo(10,10);
-		dc.LineTo(10,610);
-		dc.LineTo(610,610);
-		dc.LineTo(610,10);
-		dc.LineTo(10,10);
+		dc.MoveTo(30,30);
+		dc.LineTo(30,630);
+		dc.LineTo(630,630);
+		dc.LineTo(630,30);
+		dc.LineTo(30,30);
 
 		i = 0;
 		j = 0;
 		for( i = 0;i<15;i++){
-			dc.MoveTo(10,40*i+10);
-			dc.LineTo(610,40*i+10);
+			dc.MoveTo(30,40*i+30);
+			dc.LineTo(630,40*i+30);
 		}
 		for( j = 0;j<15;j++){
-			dc.MoveTo(40*j+10,10);
-			dc.LineTo(40*j+10,610);
+			dc.MoveTo(40*j+30,30);
+			dc.LineTo(40*j+30,630);
 		}
 
-		dc.MoveTo(640,10);
-		dc.LineTo(940,10);
-		dc.LineTo(940,530);
-		dc.LineTo(640,530);
-		dc.LineTo(640,10);
-		dc.MoveTo(640,90);
-		dc.LineTo(940,90);
-		dc.MoveTo(640,170);
-		dc.LineTo(940,170);
-		dc.MoveTo(790,10);
-		dc.LineTo(790,170);
+		dc.MoveTo(660,30);
+		dc.LineTo(960,30);
+		dc.LineTo(960,550);
+		dc.LineTo(660,550);
+		dc.LineTo(660,30);
+		dc.MoveTo(660,110);
+		dc.LineTo(960,110);
+		dc.MoveTo(660,190);
+		dc.LineTo(960,190);
+		dc.MoveTo(810,30);
+		dc.LineTo(810,190);
 
 		i = 0;
 		j = 0;
@@ -290,14 +308,14 @@ void CGoband5Dlg::OnPaint()
 			for ( j = 0;j<16;j++)
 			{
 				if(board[i][j]==WHITE){
-					dc.Ellipse(i*40+10-20,j*40+10-20,i*40+10+20,j*40+10+20);
+					dc.Ellipse(i*40+30-20,j*40+30-20,i*40+30+20,j*40+30+20);
 				}else if(board[i][j]==BLACK){
 					//等待设置画笔颜色与棋子颜色
 					CBrush *newBrush,*oldBrush;
 					newBrush = new CBrush(RGB(0,0,0));
 					oldBrush = dc.SelectObject(newBrush);
 
-					dc.Ellipse(i*40+10-20,j*40+10-20,i*40+10+20,j*40+10+20);
+					dc.Ellipse(i*40+30-20,j*40+30-20,i*40+30+20,j*40+30+20);
 
 					dc.SelectObject(oldBrush);
 					delete newBrush;
@@ -306,7 +324,44 @@ void CGoband5Dlg::OnPaint()
 			}
 		}
 		//dc.TextOut(640,10,"hello world");
+		LOGFONT logfont;
+		ZeroMemory(&logfont,sizeof(LOGFONT));
+	//	logfont.lfFaceName = " Synbol ";
+		strcpy(logfont.lfFaceName,"华文隶书");
+		logfont.lfCharSet = GB2312_CHARSET;
+		logfont.lfHeight = 70;
+		HFONT hFont = CreateFontIndirect(&logfont);
+		SelectObject(dc,hFont);
+		dc.SetBkMode(TRANSPARENT);
+		dc.SetTextColor(RGB(0,0,0));
+		dc.TextOut(670,40,"黑方");
+		dc.TextOut(670,120,"白方");
+		char blackFraction[3] ; 
+		itoa(blackFrac,blackFraction,3);
+		char whiteFraction[3] ; 
+		itoa(whiteFrac,whiteFraction,3);
+		dc.TextOut(870,40,blackFraction);
+		dc.TextOut(870,120,whiteFraction);
 
+		logfont.lfHeight = 40;
+		hFont = CreateFontIndirect(&logfont);
+		SelectObject(dc,hFont);
+		switch (colorJudge)
+		{
+		case BLACK:
+			dc.TextOut(670,200,"现在由黑方执子");
+			break;
+		case WHITE:
+			dc.TextOut(670,200,"现在由白方执子");
+			break;
+		case FOUR:
+			dc.TextOut(670,200,"对方已有四个棋");
+			dc.TextOut(670,250,"子连成一排，请");
+			dc.TextOut(670,300,"注意");
+			break;
+		default:
+			break;
+		}
 		
 		CDialog::OnPaint();
 	}
@@ -328,21 +383,24 @@ void CGoband5Dlg::OnLButtonDown(UINT nFlags, CPoint point)
 	{
 		for (j = 0;j<16;j++)
 		{
-			if ((point.x - (i*40+10))*(point.x - (i*40+10))+(point.y-(j*40+10))*(point.y-(j*40+10))<=225)
+			if ((point.x - (i*40+30))*(point.x - (i*40+30))+(point.y-(j*40+30))*(point.y-(j*40+30))<=225)
 			{
 				if (board[i][j]!=0)
 				{
 					Invalidate();
 				}else if (count%BLACK==0)
 				{
+					colorJudge = WHITE;
 					board[i][j] = BLACK;
 					count++;
 					blackNum++;
 					rank[count][0] = i;
 					rank[count][1] = j;
 					Invalidate();
-					if(checkWin(i,j))
+					int answer = checkWin(i,j);
+					if(answer>=5)
 					{
+						blackFrac++;
 						/*int answer = MessageBox("本局比赛黑方胜利,白方是否想要悔棋","战果",MB_YESNOCANCEL);
 						if (answer == IDOK)
 						{
@@ -365,16 +423,22 @@ void CGoband5Dlg::OnLButtonDown(UINT nFlags, CPoint point)
 							}
 							
 						
+					}else if (answer==4)
+					{
+						colorJudge = FOUR;
 					}
+
 				}else if (count%BLACK==WHITE)
 				{
+					colorJudge = BLACK;
 					board[i][j] = WHITE;
 					count++;
 					whiteNum++;
 					rank[count][0] = i;
 					rank[count][1] = j;
 					Invalidate();
-					if (checkWin(i,j))
+					int answer = checkWin(i,j);
+					if (answer>=5)
 					{
 						/*int answer = MessageBox("本局比赛白方胜利，黑方是否想要悔棋","战果",MB_YESNOCANCEL);
 						if (answer == IDOK)
@@ -390,6 +454,7 @@ void CGoband5Dlg::OnLButtonDown(UINT nFlags, CPoint point)
 							Invalidate();
 						}else if(answer == IDNO)
 						*/
+						whiteFrac++;
 							if (MessageBox("本局比赛白方胜利，是否要再来一局","系统消息",MB_YESNOCANCEL) == IDYES)
 							{
 								InitBoard();
@@ -398,6 +463,9 @@ void CGoband5Dlg::OnLButtonDown(UINT nFlags, CPoint point)
 							}
 						
 						
+					}else if (answer==4)
+					{
+						colorJudge = FOUR;
 					}
 					
 				}
@@ -420,7 +488,7 @@ void CGoband5Dlg::OnBack()
 	int CHOICE = MessageBox("对方想要悔棋，是否同意","系统消息",MB_YESNOCANCEL);
 	if(CHOICE == IDYES)
 	{
-		if (rank[1][0]!=0 && rank[1][1]!=0)//判断是否为第一个子，避免程序崩溃
+		if (rank[1][0]!=0 && rank[1][1]!=0 && rank[2][0]!=0 &&rank[2][1]!=0)//判断是否为第一个子，避免程序崩溃
 		{
 			board[rank[count][0]][rank[count][1]] = 0;
 			board[rank[count-1][0]][rank[count-1][1]] = 0;
@@ -465,6 +533,7 @@ void CGoband5Dlg::OnBack()
 int CGoband5Dlg::checkWin(int x, int y)
 {//输入最新下的一个点的坐标
 	
+		int maxone = 0;;
 		int total = 1;
 		i = 0;
 		j = 0;
@@ -472,8 +541,9 @@ int CGoband5Dlg::checkWin(int x, int y)
 			total++;
 		for (i = x - 1;board[i][y] == board[x][y];i--)
 			total++;
-		if (total >= 5) 
-			return 1;
+		maxone = max(maxone,total);
+	//	if (total >= 5) 
+	//		return 1;
 	//	else 
 	//		return 0;//如果左右连续相同的点加起来超过5个则函数值为1，反之为0
 		total = 1;
@@ -481,28 +551,32 @@ int CGoband5Dlg::checkWin(int x, int y)
 			total++;
 		for (j = y - 1;board[x][j] == board[x][y];j--)
 			total++;
-		if (total >= 5)
-			return 1;//如果上下连续相同的点加起来超过5个则函数值为1
+	//	if (total >= 5)
+	//		return 1;//如果上下连续相同的点加起来超过5个则函数值为1
+		maxone = max(maxone,total);
 		total = 1;
 		for (i = x + 1,j = y + 1;board[i][j] == board[x][y];i++,j++)
 			total++;
 		for (i = x - 1,j = y - 1;board[i][j] == board[x][y];i--,j--)
 			total++;
-		if (total >= 5) 
-			return 1;//如果y=x方向连续相同的点加起来超过5个则函数值为1
+	//	if (total >= 5) 
+	//		return 1;//如果y=x方向连续相同的点加起来超过5个则函数值为1
+		maxone = max(maxone,total);
 		total = 1;
 		for (i = x + 1, j = y - 1;board[i][j] == board[x][y];i++, j--)
 			total++;
 		for (i = x - 1, j = y + 1;board[i][j] == board[x][y];i--, j++)
 			total++;
-		if (total >= 5)
-			return 1;//如果y=-x方向连续相同的点加起来超过5个则函数值为1
-		return 0;
+	//	if (total >= 5)
+	//		return 1;//如果y=-x方向连续相同的点加起来超过5个则函数值为1
+		maxone = max(maxone,total);
+		return maxone;
 
 }
 
 void CGoband5Dlg::InitBoard()
 {
+	colorJudge = BLACK;
 	for (i = 0;i<16;i++)
 	{
 		for (j = 0;j<16;j++)
@@ -520,3 +594,1073 @@ void CGoband5Dlg::InitBoard()
 	}							
 	count = 0;	
 }
+
+//DEL void CGoband5Dlg::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) 
+//DEL {
+//DEL 	// TODO: Add your message handler code here and/or call default
+//DEL 	switch(nChar){
+//DEL 		case 
+//DEL 	}
+//DEL 	
+//DEL 	CDialog::OnKeyDown(nChar, nRepCnt, nFlags);
+//DEL }
+
+//DEL int* CGoband5Dlg::AIChess()
+//DEL {
+//DEL 	int returnNum[4];
+//DEL 	for (i=0;i<)
+//DEL 	{
+//DEL 	}
+//DEL }
+
+//DEL int CGoband5Dlg::AICalculate(int x, int y)
+//DEL {
+//DEL 
+//DEL 	int Fraction = 0;
+//DEL 	int WHITEONE[8] = {0};
+//DEL 	int BLACKONE[8] = {0};
+//DEL //计算周围棋子的情况
+//DEL 	//横右
+//DEL 	for (i=1;board[x+i][y]==WHITE;i++  )
+//DEL 	{
+//DEL 		WHITEONE[0]++;
+//DEL 	}
+//DEL 	for (i=1;board[x+i][y]==BLACK;i++)
+//DEL 	{
+//DEL 		BLACKONE[0]++;
+//DEL 	}
+//DEL 	//横左
+//DEL 	for (i=-1;board[x+i][y]==WHITE;i--  )
+//DEL 	{
+//DEL 		WHITEONE[1]++;
+//DEL 	}
+//DEL 	for (i=-1;board[x+i][y]==BLACK;i--)
+//DEL 	{
+//DEL 		BLACKONE[1]++;
+//DEL 	}
+//DEL 	//竖上
+//DEL 	for (i=1;board[x][y+i]==WHITE;i++  )
+//DEL 	{
+//DEL 		WHITEONE[2]++;
+//DEL 	}
+//DEL 	for (i=1;board[x][y+i]==BLACK;i++)
+//DEL 	{
+//DEL 		BLACKONE[2]++;
+//DEL 	}
+//DEL 	//竖下
+//DEL 	for (i=-1;board[x][y+i]==WHITE;i--  )
+//DEL 	{
+//DEL 		WHITEONE[3]++;
+//DEL 	}
+//DEL 	for (i=-1;board[x][y+i]==BLACK;i--)
+//DEL 	{
+//DEL 		BLACKONE[3]++;
+//DEL 	}
+//DEL 	//右上斜向上
+//DEL 	for (i=1,j=1;board[x+i][y]==WHITE;i++,j++  )
+//DEL 	{
+//DEL 		WHITEONE[4]++;
+//DEL 	}
+//DEL 	for (i=1,j=1;board[x+i][y]==BLACK;i++,j++)
+//DEL 	{
+//DEL 		BLACKONE[4]++;
+//DEL 	}
+//DEL 	//右上斜向下
+//DEL 	for (i=-1,j=-1;board[x+i][y+j]==WHITE;i--,j--  )
+//DEL 	{
+//DEL 		WHITEONE[5]++;
+//DEL 	}
+//DEL 	for (i=-1,j=-1;board[x+i][y+j]==BLACK;i--,j--)
+//DEL 	{
+//DEL 		BLACKONE[5]++;
+//DEL 	}
+//DEL 	//左上斜向上
+//DEL 	for (i=1,j=-1;board[x+i][y+j]==WHITE;i++,j--  )
+//DEL 	{
+//DEL 		WHITEONE[6]++;
+//DEL 	}
+//DEL 	for (i=1,j=-1;board[x+i][y+j]==BLACK;i++,j--)
+//DEL 	{
+//DEL 		BLACKONE[6]++;
+//DEL 	}
+//DEL 	//左上斜向下
+//DEL 	for (i=-1,j=1;board[x+i][y+j]==WHITE;i--,j++  )
+//DEL 	{
+//DEL 		WHITEONE[7]++;
+//DEL 	}
+//DEL 	for (i=-1,j=1;board[x+i][y+j]==BLACK;i--,j++)
+//DEL 	{
+//DEL 		BLACKONE[7]++;
+//DEL 	}
+//DEL //攻
+//DEL 	switch(WHITEONE[0]+WHITEONE[1])
+//DEL 	{
+//DEL 	case 0:
+//DEL 		break;
+//DEL 	case 1:
+//DEL 		if (WHITEONE[0]==1)
+//DEL 		{
+//DEL 			if (board[x+2][y]==BLACK)
+//DEL 			{
+//DEL 				Fraction+=1;
+//DEL 			} 
+//DEL 			else
+//DEL 			{
+//DEL 				Fraction+=10;
+//DEL 			}
+//DEL 		} 
+//DEL 		else
+//DEL 		{
+//DEL 			if (board[x-2][y]==BLACK)
+//DEL 			{
+//DEL 				Fraction+=1;
+//DEL 			} 
+//DEL 			else
+//DEL 			{
+//DEL 				Fraction+=10;
+//DEL 			}
+//DEL 		}
+//DEL 		break;
+//DEL 	case 2:
+//DEL 		switch(WHITEONE[0])
+//DEL 		{
+//DEL 		case 0:		
+//DEL 			if (board[x-3][y]==BLACK)	//限制两子
+//DEL 			{
+//DEL 				Fraction+=100;
+//DEL 			} 
+//DEL 			else		//自由两子
+//DEL 			{
+//DEL 				Fraction+=200;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 1:
+//DEL 			if (board[x-2][y]==BLACK && board[x+2][y]==BLACK)//两端限制
+//DEL 			{
+//DEL 			} 
+//DEL 			else if(board[x-2][y]==0 && board[x+2][y]==0)//两端自由
+//DEL 			{
+//DEL 				Fraction+=200;
+//DEL 			}
+//DEL 			else		//一段限制
+//DEL 			{
+//DEL 				Fraction+=50;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 2:
+//DEL 			if (board[x+3][y]==BLACK)	//限制两子
+//DEL 			{
+//DEL 				Fraction+=100;
+//DEL 			} 
+//DEL 			else		//自由两子
+//DEL 			{
+//DEL 				Fraction+=200;
+//DEL 			}
+//DEL 			break;
+//DEL 		}
+//DEL 	case 3:
+//DEL 		switch(WHITEONE[0])
+//DEL 		{
+//DEL 		case 0:
+//DEL 			if (board[x-4][y]==0)//自由三子
+//DEL 			{
+//DEL 				Fraction+=500;
+//DEL 			} 
+//DEL 			else//限制三子
+//DEL 			{
+//DEL 				Fraction+=100;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 1:
+//DEL 			if (board[x-3][y]==0 && board[x+2][y]==0)		//自由三子
+//DEL 			{
+//DEL 				Fraction+=500;
+//DEL 			} 
+//DEL 			else if (board[x-3][y]==BLACK && board[x+2][y]==BLACK)//两端限制
+//DEL 			{
+//DEL 				Fraction+=0;
+//DEL 			}
+//DEL 			else{
+//DEL 				Fraction+=100;//限制三子
+//DEL 			}
+//DEL 			break;
+//DEL 		case 2:
+//DEL 			if (board[x-2][y]==0 && board[x+3][y]==0)		//自由三子
+//DEL 			{
+//DEL 				Fraction+=500;
+//DEL 			} 
+//DEL 			else if (board[x-2][y]==BLACK && board[x+3][y]==BLACK)//两端限制
+//DEL 			{
+//DEL 				Fraction+=0;
+//DEL 			}
+//DEL 			else{
+//DEL 				Fraction+=100;//限制三子
+//DEL 			}
+//DEL 			break;
+//DEL 		case 3:
+//DEL 			if (board[x+4][y]==0)//自由三子
+//DEL 			{
+//DEL 				Fraction+=500;
+//DEL 			} 
+//DEL 			else//限制三子
+//DEL 			{
+//DEL 				Fraction+=100;
+//DEL 			}
+//DEL 			break;
+//DEL 
+//DEL 		}
+//DEL 		break;
+//DEL 	default:
+//DEL 		Fraction+=1000;
+//DEL 	}
+//DEL 
+//DEL 	switch(WHITEONE[2]+WHITEONE[3])
+//DEL 	{
+//DEL 	case 0:
+//DEL 		break;
+//DEL 	case 1:
+//DEL 		if (WHITEONE[2]==1)
+//DEL 		{
+//DEL 			if (board[x][y+2]==BLACK)
+//DEL 			{
+//DEL 				Fraction+=1;
+//DEL 			} 
+//DEL 			else
+//DEL 			{
+//DEL 				Fraction+=10;
+//DEL 			}
+//DEL 		} 
+//DEL 		else
+//DEL 		{
+//DEL 			if (board[x][y-2]==BLACK)
+//DEL 			{
+//DEL 				Fraction+=1;
+//DEL 			} 
+//DEL 			else
+//DEL 			{
+//DEL 				Fraction+=10;
+//DEL 			}
+//DEL 		}
+//DEL 		break;
+//DEL 	case 2:
+//DEL 		switch(WHITEONE[2])
+//DEL 		{
+//DEL 		case 0:		
+//DEL 			if (board[x][y-3]==BLACK)	//限制两子
+//DEL 			{
+//DEL 				Fraction+=100;
+//DEL 			} 
+//DEL 			else		//自由两子
+//DEL 			{
+//DEL 				Fraction+=200;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 1:
+//DEL 			if (board[x][y-2]==BLACK && board[x][y+2]==BLACK)//两端限制
+//DEL 			{
+//DEL 			} 
+//DEL 			else if(board[x][y-2]==0 && board[x][y+2]==0)//两端自由
+//DEL 			{
+//DEL 				Fraction+=200;
+//DEL 			}
+//DEL 			else		//一段限制
+//DEL 			{
+//DEL 				Fraction+=50;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 2:
+//DEL 			if (board[x][y+3]==BLACK)	//限制两子
+//DEL 			{
+//DEL 				Fraction+=100;
+//DEL 			} 
+//DEL 			else		//自由两子
+//DEL 			{
+//DEL 				Fraction+=200;
+//DEL 			}
+//DEL 			break;
+//DEL 		}
+//DEL 	case 3:
+//DEL 		switch(WHITEONE[2])
+//DEL 		{
+//DEL 		case 0:
+//DEL 			if (board[x][y-4]==0)//自由三子
+//DEL 			{
+//DEL 				Fraction+=500;
+//DEL 			} 
+//DEL 			else//限制三子
+//DEL 			{
+//DEL 				Fraction+=100;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 1:
+//DEL 			if (board[x][y-3]==0 && board[x][y+2]==0)		//自由三子
+//DEL 			{
+//DEL 				Fraction+=500;
+//DEL 			} 
+//DEL 			else if (board[x][y-3]==BLACK && board[x][y+2]==BLACK)//两端限制
+//DEL 			{
+//DEL 				Fraction+=0;
+//DEL 			}
+//DEL 			else{
+//DEL 				Fraction+=100;//限制三子
+//DEL 			}
+//DEL 			break;
+//DEL 		case 2:
+//DEL 			if (board[x][y-2]==0 && board[x][y+3]==0)		//自由三子
+//DEL 			{
+//DEL 				Fraction+=500;
+//DEL 			} 
+//DEL 			else if (board[x][y-2]==BLACK && board[x][y+3]==BLACK)//两端限制
+//DEL 			{
+//DEL 				Fraction+=0;
+//DEL 			}
+//DEL 			else{
+//DEL 				Fraction+=100;//限制三子
+//DEL 			}
+//DEL 			break;
+//DEL 		case 3:
+//DEL 			if (board[x][y+4]==0)//自由三子
+//DEL 			{
+//DEL 				Fraction+=500;
+//DEL 			} 
+//DEL 			else//限制三子
+//DEL 			{
+//DEL 				Fraction+=100;
+//DEL 			}
+//DEL 			break;
+//DEL 
+//DEL 		}
+//DEL 		break;
+//DEL 	default:
+//DEL 		Fraction+=1000;
+//DEL 	}
+//DEL 
+//DEL 	switch(WHITEONE[4]+WHITEONE[5])
+//DEL 	{
+//DEL 	case 0:
+//DEL 		break;
+//DEL 	case 1:
+//DEL 		if (WHITEONE[0]==1)
+//DEL 		{
+//DEL 			if (board[x+2][y+2]==BLACK)
+//DEL 			{
+//DEL 				Fraction+=1;
+//DEL 			} 
+//DEL 			else
+//DEL 			{
+//DEL 				Fraction+=10;
+//DEL 			}
+//DEL 		} 
+//DEL 		else
+//DEL 		{
+//DEL 			if (board[x-2][y-2]==BLACK)
+//DEL 			{
+//DEL 				Fraction+=1;
+//DEL 			} 
+//DEL 			else
+//DEL 			{
+//DEL 				Fraction+=10;
+//DEL 			}
+//DEL 		}
+//DEL 		break;
+//DEL 	case 2:
+//DEL 		switch(WHITEONE[4])
+//DEL 		{
+//DEL 		case 0:		
+//DEL 			if (board[x-3][y-3]==BLACK)	//限制两子
+//DEL 			{
+//DEL 				Fraction+=100;
+//DEL 			} 
+//DEL 			else		//自由两子
+//DEL 			{
+//DEL 				Fraction+=200;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 1:
+//DEL 			if (board[x-2][y-2]==BLACK && board[x+2][y+2]==BLACK)//两端限制
+//DEL 			{
+//DEL 			} 
+//DEL 			else if(board[x-2][y-2]==0 && board[x+2][y+2]==0)//两端自由
+//DEL 			{
+//DEL 				Fraction+=200;
+//DEL 			}
+//DEL 			else		//一段限制
+//DEL 			{
+//DEL 				Fraction+=50;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 2:
+//DEL 			if (board[x+3][y+3]==BLACK)	//限制两子
+//DEL 			{
+//DEL 				Fraction+=100;
+//DEL 			} 
+//DEL 			else		//自由两子
+//DEL 			{
+//DEL 				Fraction+=200;
+//DEL 			}
+//DEL 			break;
+//DEL 		}
+//DEL 	case 3:
+//DEL 		switch(WHITEONE[4])
+//DEL 		{
+//DEL 		case 0:
+//DEL 			if (board[x-4][y-4]==0)//自由三子
+//DEL 			{
+//DEL 				Fraction+=500;
+//DEL 			} 
+//DEL 			else//限制三子
+//DEL 			{
+//DEL 				Fraction+=100;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 1:
+//DEL 			if (board[x-3][y-3]==0 && board[x+2][y+2]==0)		//自由三子
+//DEL 			{
+//DEL 				Fraction+=500;
+//DEL 			} 
+//DEL 			else if (board[x-3][y-3]==BLACK && board[x+2][y+2]==BLACK)//两端限制
+//DEL 			{
+//DEL 				Fraction+=0;
+//DEL 			}
+//DEL 			else{
+//DEL 				Fraction+=100;//限制三子
+//DEL 			}
+//DEL 			break;
+//DEL 		case 2:
+//DEL 			if (board[x-2][y-2]==0 && board[x+3][y+3]==0)		//自由三子
+//DEL 			{
+//DEL 				Fraction+=500;
+//DEL 			} 
+//DEL 			else if (board[x-2][y-2]==BLACK && board[x+3][y+3]==BLACK)//两端限制
+//DEL 			{
+//DEL 				Fraction+=0;
+//DEL 			}
+//DEL 			else{
+//DEL 				Fraction+=100;//限制三子
+//DEL 			}
+//DEL 			break;
+//DEL 		case 3:
+//DEL 			if (board[x+4][y+4]==0)//自由三子
+//DEL 			{
+//DEL 				Fraction+=500;
+//DEL 			} 
+//DEL 			else//限制三子
+//DEL 			{
+//DEL 				Fraction+=100;
+//DEL 			}
+//DEL 			break;
+//DEL 
+//DEL 		}
+//DEL 		break;
+//DEL 	default:
+//DEL 		Fraction+=1000;
+//DEL 	}
+//DEL 
+//DEL 	switch(WHITEONE[6]+WHITEONE[7])
+//DEL 	{
+//DEL 	case 0:
+//DEL 		break;
+//DEL 	case 1:
+//DEL 		if (WHITEONE[6]==1)
+//DEL 		{
+//DEL 			if (board[x+2][y-2]==BLACK)
+//DEL 			{
+//DEL 				Fraction+=1;
+//DEL 			} 
+//DEL 			else
+//DEL 			{
+//DEL 				Fraction+=10;
+//DEL 			}
+//DEL 		} 
+//DEL 		else
+//DEL 		{
+//DEL 			if (board[x-2][y+2]==BLACK)
+//DEL 			{
+//DEL 				Fraction+=1;
+//DEL 			} 
+//DEL 			else
+//DEL 			{
+//DEL 				Fraction+=10;
+//DEL 			}
+//DEL 		}
+//DEL 		break;
+//DEL 	case 2:
+//DEL 		switch(WHITEONE[0])
+//DEL 		{
+//DEL 		case 0:		
+//DEL 			if (board[x-3][y+3]==BLACK)	//限制两子
+//DEL 			{
+//DEL 				Fraction+=100;
+//DEL 			} 
+//DEL 			else		//自由两子
+//DEL 			{
+//DEL 				Fraction+=200;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 1:
+//DEL 			if (board[x-2][y+2]==BLACK && board[x+2][y-2]==BLACK)//两端限制
+//DEL 			{
+//DEL 			} 
+//DEL 			else if(board[x-2][y+2]==0 && board[x+2][y-2]==0)//两端自由
+//DEL 			{
+//DEL 				Fraction+=200;
+//DEL 			}
+//DEL 			else		//一段限制
+//DEL 			{
+//DEL 				Fraction+=50;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 2:
+//DEL 			if (board[x+3][y-3]==BLACK)	//限制两子
+//DEL 			{
+//DEL 				Fraction+=100;
+//DEL 			} 
+//DEL 			else		//自由两子
+//DEL 			{
+//DEL 				Fraction+=200;
+//DEL 			}
+//DEL 			break;
+//DEL 		}
+//DEL 	case 3:
+//DEL 		switch(WHITEONE[6])
+//DEL 		{
+//DEL 		case 0:
+//DEL 			if (board[x-4][y+4]==0)//自由三子
+//DEL 			{
+//DEL 				Fraction+=500;
+//DEL 			} 
+//DEL 			else//限制三子
+//DEL 			{
+//DEL 				Fraction+=100;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 1:
+//DEL 			if (board[x-3][y+3]==0 && board[x+2][y-2]==0)		//自由三子
+//DEL 			{
+//DEL 				Fraction+=500;
+//DEL 			} 
+//DEL 			else if (board[x-3][y+3]==BLACK && board[x+2][y-2]==BLACK)//两端限制
+//DEL 			{
+//DEL 				Fraction+=0;
+//DEL 			}
+//DEL 			else{
+//DEL 				Fraction+=100;//限制三子
+//DEL 			}
+//DEL 			break;
+//DEL 		case 2:
+//DEL 			if (board[x-2][y+2]==0 && board[x+3][y-3]==0)		//自由三子
+//DEL 			{
+//DEL 				Fraction+=500;
+//DEL 			} 
+//DEL 			else if (board[x-2][y+2]==BLACK && board[x+3][y-3]==BLACK)//两端限制
+//DEL 			{
+//DEL 				Fraction+=0;
+//DEL 			}
+//DEL 			else{
+//DEL 				Fraction+=100;//限制三子
+//DEL 			}
+//DEL 			break;
+//DEL 		case 3:
+//DEL 			if (board[x+4][y-4]==0)//自由三子
+//DEL 			{
+//DEL 				Fraction+=500;
+//DEL 			} 
+//DEL 			else//限制三子
+//DEL 			{
+//DEL 				Fraction+=100;
+//DEL 			}
+//DEL 			break;
+//DEL 
+//DEL 		}
+//DEL 		break;
+//DEL 	default:
+//DEL 		Fraction+=1000;
+//DEL 	}
+//DEL //守
+//DEL switch (BLACKONE[0] + BLACKONE[1])
+//DEL 	{
+//DEL 	case 0:
+//DEL 		break;
+//DEL 	case 1:
+//DEL 		if (BLACKONE[0] == 1)
+//DEL 		{
+//DEL 			if (board[x + 2][y] == WHITE)
+//DEL 			{
+//DEL 				Fraction += 1;
+//DEL 			}
+//DEL 			else
+//DEL 			{
+//DEL 				Fraction += 10;
+//DEL 			}
+//DEL 		}
+//DEL 		else
+//DEL 		{
+//DEL 			if (board[x - 2][y] == WHITE)
+//DEL 			{
+//DEL 				Fraction += 1;
+//DEL 			}
+//DEL 			else
+//DEL 			{
+//DEL 				Fraction += 10;
+//DEL 			}
+//DEL 		}
+//DEL 		break;
+//DEL 	case 2:
+//DEL 		switch (BLACKONE[0])
+//DEL 		{
+//DEL 		case 0:
+//DEL 			if (board[x - 3][y] == WHITE)	//限制两子
+//DEL 			{
+//DEL 				Fraction += 100;
+//DEL 			}
+//DEL 			else		//自由两子
+//DEL 			{
+//DEL 				Fraction += 200;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 1:
+//DEL 			if (board[x - 2][y] == WHITE && board[x + 2][y] == WHITE)//两端限制
+//DEL 			{
+//DEL 			}
+//DEL 			else if (board[x - 2][y] == 0 && board[x + 2][y] == 0)//两端自由
+//DEL 			{
+//DEL 				Fraction += 200;
+//DEL 			}
+//DEL 			else		//一段限制
+//DEL 			{
+//DEL 				Fraction += 50;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 2:
+//DEL 			if (board[x + 3][y] == WHITE)	//限制两子
+//DEL 			{
+//DEL 				Fraction += 100;
+//DEL 			}
+//DEL 			else		//自由两子
+//DEL 			{
+//DEL 				Fraction += 200;
+//DEL 			}
+//DEL 			break;
+//DEL 		}
+//DEL 	case 3:
+//DEL 		switch (BLACKONE[0])
+//DEL 		{
+//DEL 		case 0:
+//DEL 			if (board[x - 4][y] == 0)//自由三子
+//DEL 			{
+//DEL 				Fraction += 500;
+//DEL 			}
+//DEL 			else//限制三子
+//DEL 			{
+//DEL 				Fraction += 100;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 1:
+//DEL 			if (board[x - 3][y] == 0 && board[x + 2][y] == 0)		//自由三子
+//DEL 			{
+//DEL 				Fraction += 500;
+//DEL 			}
+//DEL 			else if (board[x - 3][y] == WHITE && board[x + 2][y] == WHITE)//两端限制
+//DEL 			{
+//DEL 				Fraction += 0;
+//DEL 			}
+//DEL 			else {
+//DEL 				Fraction += 100;//限制三子
+//DEL 			}
+//DEL 			break;
+//DEL 		case 2:
+//DEL 			if (board[x - 2][y] == 0 && board[x + 3][y] == 0)		//自由三子
+//DEL 			{
+//DEL 				Fraction += 500;
+//DEL 			}
+//DEL 			else if (board[x - 2][y] == WHITE && board[x + 3][y] == WHITE)//两端限制
+//DEL 			{
+//DEL 				Fraction += 0;
+//DEL 			}
+//DEL 			else {
+//DEL 				Fraction += 100;//限制三子
+//DEL 			}
+//DEL 			break;
+//DEL 		case 3:
+//DEL 			if (board[x + 4][y] == 0)//自由三子
+//DEL 			{
+//DEL 				Fraction += 500;
+//DEL 			}
+//DEL 			else//限制三子
+//DEL 			{
+//DEL 				Fraction += 100;
+//DEL 			}
+//DEL 			break;
+//DEL 
+//DEL 		}
+//DEL 		break;
+//DEL 	default:
+//DEL 		Fraction += 1000;
+//DEL 	}
+//DEL 
+//DEL 	switch (BLACKONE[2] + BLACKONE[3])
+//DEL 	{
+//DEL 	case 0:
+//DEL 		break;
+//DEL 	case 1:
+//DEL 		if (BLACKONE[2] == 1)
+//DEL 		{
+//DEL 			if (board[x][y + 2] == WHITE)
+//DEL 			{
+//DEL 				Fraction += 1;
+//DEL 			}
+//DEL 			else
+//DEL 			{
+//DEL 				Fraction += 10;
+//DEL 			}
+//DEL 		}
+//DEL 		else
+//DEL 		{
+//DEL 			if (board[x][y - 2] == WHITE)
+//DEL 			{
+//DEL 				Fraction += 1;
+//DEL 			}
+//DEL 			else
+//DEL 			{
+//DEL 				Fraction += 10;
+//DEL 			}
+//DEL 		}
+//DEL 		break;
+//DEL 	case 2:
+//DEL 		switch (BLACKONE[2])
+//DEL 		{
+//DEL 		case 0:
+//DEL 			if (board[x][y - 3] == WHITE)	//限制两子
+//DEL 			{
+//DEL 				Fraction += 100;
+//DEL 			}
+//DEL 			else		//自由两子
+//DEL 			{
+//DEL 				Fraction += 200;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 1:
+//DEL 			if (board[x][y - 2] == WHITE && board[x][y + 2] == WHITE)//两端限制
+//DEL 			{
+//DEL 			}
+//DEL 			else if (board[x][y - 2] == 0 && board[x][y + 2] == 0)//两端自由
+//DEL 			{
+//DEL 				Fraction += 200;
+//DEL 			}
+//DEL 			else		//一段限制
+//DEL 			{
+//DEL 				Fraction += 50;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 2:
+//DEL 			if (board[x][y + 3] == WHITE)	//限制两子
+//DEL 			{
+//DEL 				Fraction += 100;
+//DEL 			}
+//DEL 			else		//自由两子
+//DEL 			{
+//DEL 				Fraction += 200;
+//DEL 			}
+//DEL 			break;
+//DEL 		}
+//DEL 	case 3:
+//DEL 		switch (BLACKONE[2])
+//DEL 		{
+//DEL 		case 0:
+//DEL 			if (board[x][y - 4] == 0)//自由三子
+//DEL 			{
+//DEL 				Fraction += 500;
+//DEL 			}
+//DEL 			else//限制三子
+//DEL 			{
+//DEL 				Fraction += 100;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 1:
+//DEL 			if (board[x][y - 3] == 0 && board[x][y + 2] == 0)		//自由三子
+//DEL 			{
+//DEL 				Fraction += 500;
+//DEL 			}
+//DEL 			else if (board[x][y - 3] == WHITE && board[x][y + 2] == WHITE)//两端限制
+//DEL 			{
+//DEL 				Fraction += 0;
+//DEL 			}
+//DEL 			else {
+//DEL 				Fraction += 100;//限制三子
+//DEL 			}
+//DEL 			break;
+//DEL 		case 2:
+//DEL 			if (board[x][y - 2] == 0 && board[x][y + 3] == 0)		//自由三子
+//DEL 			{
+//DEL 				Fraction += 500;
+//DEL 			}
+//DEL 			else if (board[x][y - 2] == WHITE && board[x][y + 3] == WHITE)//两端限制
+//DEL 			{
+//DEL 				Fraction += 0;
+//DEL 			}
+//DEL 			else {
+//DEL 				Fraction += 100;//限制三子
+//DEL 			}
+//DEL 			break;
+//DEL 		case 3:
+//DEL 			if (board[x][y + 4] == 0)//自由三子
+//DEL 			{
+//DEL 				Fraction += 500;
+//DEL 			}
+//DEL 			else//限制三子
+//DEL 			{
+//DEL 				Fraction += 100;
+//DEL 			}
+//DEL 			break;
+//DEL 
+//DEL 		}
+//DEL 		break;
+//DEL 	default:
+//DEL 		Fraction += 1000;
+//DEL 	}
+//DEL 
+//DEL 	switch (BLACKONE[4] + BLACKONE[5])
+//DEL 	{
+//DEL 	case 0:
+//DEL 		break;
+//DEL 	case 1:
+//DEL 		if (BLACKONE[0] == 1)
+//DEL 		{
+//DEL 			if (board[x + 2][y + 2] == WHITE)
+//DEL 			{
+//DEL 				Fraction += 1;
+//DEL 			}
+//DEL 			else
+//DEL 			{
+//DEL 				Fraction += 10;
+//DEL 			}
+//DEL 		}
+//DEL 		else
+//DEL 		{
+//DEL 			if (board[x - 2][y - 2] == WHITE)
+//DEL 			{
+//DEL 				Fraction += 1;
+//DEL 			}
+//DEL 			else
+//DEL 			{
+//DEL 				Fraction += 10;
+//DEL 			}
+//DEL 		}
+//DEL 		break;
+//DEL 	case 2:
+//DEL 		switch (BLACKONE[4])
+//DEL 		{
+//DEL 		case 0:
+//DEL 			if (board[x - 3][y - 3] == WHITE)	//限制两子
+//DEL 			{
+//DEL 				Fraction += 100;
+//DEL 			}
+//DEL 			else		//自由两子
+//DEL 			{
+//DEL 				Fraction += 200;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 1:
+//DEL 			if (board[x - 2][y - 2] == WHITE && board[x + 2][y + 2] == WHITE)//两端限制
+//DEL 			{
+//DEL 			}
+//DEL 			else if (board[x - 2][y - 2] == 0 && board[x + 2][y + 2] == 0)//两端自由
+//DEL 			{
+//DEL 				Fraction += 200;
+//DEL 			}
+//DEL 			else		//一段限制
+//DEL 			{
+//DEL 				Fraction += 50;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 2:
+//DEL 			if (board[x + 3][y + 3] == WHITE)	//限制两子
+//DEL 			{
+//DEL 				Fraction += 100;
+//DEL 			}
+//DEL 			else		//自由两子
+//DEL 			{
+//DEL 				Fraction += 200;
+//DEL 			}
+//DEL 			break;
+//DEL 		}
+//DEL 	case 3:
+//DEL 		switch (BLACKONE[4])
+//DEL 		{
+//DEL 		case 0:
+//DEL 			if (board[x - 4][y - 4] == 0)//自由三子
+//DEL 			{
+//DEL 				Fraction += 500;
+//DEL 			}
+//DEL 			else//限制三子
+//DEL 			{
+//DEL 				Fraction += 100;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 1:
+//DEL 			if (board[x - 3][y - 3] == 0 && board[x + 2][y + 2] == 0)		//自由三子
+//DEL 			{
+//DEL 				Fraction += 500;
+//DEL 			}
+//DEL 			else if (board[x - 3][y - 3] == WHITE && board[x + 2][y + 2] == WHITE)//两端限制
+//DEL 			{
+//DEL 				Fraction += 0;
+//DEL 			}
+//DEL 			else {
+//DEL 				Fraction += 100;//限制三子
+//DEL 			}
+//DEL 			break;
+//DEL 		case 2:
+//DEL 			if (board[x - 2][y - 2] == 0 && board[x + 3][y + 3] == 0)		//自由三子
+//DEL 			{
+//DEL 				Fraction += 500;
+//DEL 			}
+//DEL 			else if (board[x - 2][y - 2] == WHITE && board[x + 3][y + 3] == WHITE)//两端限制
+//DEL 			{
+//DEL 				Fraction += 0;
+//DEL 			}
+//DEL 			else {
+//DEL 				Fraction += 100;//限制三子
+//DEL 			}
+//DEL 			break;
+//DEL 		case 3:
+//DEL 			if (board[x + 4][y + 4] == 0)//自由三子
+//DEL 			{
+//DEL 				Fraction += 500;
+//DEL 			}
+//DEL 			else//限制三子
+//DEL 			{
+//DEL 				Fraction += 100;
+//DEL 			}
+//DEL 			break;
+//DEL 
+//DEL 		}
+//DEL 		break;
+//DEL 	default:
+//DEL 		Fraction += 1000;
+//DEL 	}
+//DEL 
+//DEL 	switch (BLACKONE[6] + BLACKONE[7])
+//DEL 	{
+//DEL 	case 0:
+//DEL 		break;
+//DEL 	case 1:
+//DEL 		if (BLACKONE[6] == 1)
+//DEL 		{
+//DEL 			if (board[x + 2][y - 2] == WHITE)
+//DEL 			{
+//DEL 				Fraction += 1;
+//DEL 			}
+//DEL 			else
+//DEL 			{
+//DEL 				Fraction += 10;
+//DEL 			}
+//DEL 		}
+//DEL 		else
+//DEL 		{
+//DEL 			if (board[x - 2][y + 2] == WHITE)
+//DEL 			{
+//DEL 				Fraction += 1;
+//DEL 			}
+//DEL 			else
+//DEL 			{
+//DEL 				Fraction += 10;
+//DEL 			}
+//DEL 		}
+//DEL 		break;
+//DEL 	case 2:
+//DEL 		switch (BLACKONE[0])
+//DEL 		{
+//DEL 		case 0:
+//DEL 			if (board[x - 3][y + 3] == WHITE)	//限制两子
+//DEL 			{
+//DEL 				Fraction += 100;
+//DEL 			}
+//DEL 			else		//自由两子
+//DEL 			{
+//DEL 				Fraction += 200;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 1:
+//DEL 			if (board[x - 2][y + 2] == WHITE && board[x + 2][y - 2] == WHITE)//两端限制
+//DEL 			{
+//DEL 			}
+//DEL 			else if (board[x - 2][y + 2] == 0 && board[x + 2][y - 2] == 0)//两端自由
+//DEL 			{
+//DEL 				Fraction += 200;
+//DEL 			}
+//DEL 			else		//一段限制
+//DEL 			{
+//DEL 				Fraction += 50;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 2:
+//DEL 			if (board[x + 3][y - 3] == WHITE)	//限制两子
+//DEL 			{
+//DEL 				Fraction += 100;
+//DEL 			}
+//DEL 			else		//自由两子
+//DEL 			{
+//DEL 				Fraction += 200;
+//DEL 			}
+//DEL 			break;
+//DEL 		}
+//DEL 	case 3:
+//DEL 		switch (BLACKONE[6])
+//DEL 		{
+//DEL 		case 0:
+//DEL 			if (board[x - 4][y + 4] == 0)//自由三子
+//DEL 			{
+//DEL 				Fraction += 500;
+//DEL 			}
+//DEL 			else//限制三子
+//DEL 			{
+//DEL 				Fraction += 100;
+//DEL 			}
+//DEL 			break;
+//DEL 		case 1:
+//DEL 			if (board[x - 3][y + 3] == 0 && board[x + 2][y - 2] == 0)		//自由三子
+//DEL 			{
+//DEL 				Fraction += 500;
+//DEL 			}
+//DEL 			else if (board[x - 3][y + 3] == WHITE && board[x + 2][y - 2] == WHITE)//两端限制
+//DEL 			{
+//DEL 				Fraction += 0;
+//DEL 			}
+//DEL 			else {
+//DEL 				Fraction += 100;//限制三子
+//DEL 			}
+//DEL 			break;
+//DEL 		case 2:
+//DEL 			if (board[x - 2][y + 2] == 0 && board[x + 3][y - 3] == 0)		//自由三子
+//DEL 			{
+//DEL 				Fraction += 500;
+//DEL 			}
+//DEL 			else if (board[x - 2][y + 2] == WHITE && board[x + 3][y - 3] == WHITE)//两端限制
+//DEL 			{
+//DEL 				Fraction += 0;
+//DEL 			}
+//DEL 			else {
+//DEL 				Fraction += 100;//限制三子
+//DEL 			}
+//DEL 			break;
+//DEL 		case 3:
+//DEL 			if (board[x + 4][y - 4] == 0)//自由三子
+//DEL 			{
+//DEL 				Fraction += 500;
+//DEL 			}
+//DEL 			else//限制三子
+//DEL 			{
+//DEL 				Fraction += 100;
+//DEL 			}
+//DEL 			break;
+//DEL 
+//DEL 		}
+//DEL 		break;
+//DEL 	default:
+//DEL 		Fraction += 1000;
+//DEL 	}
+//DEL 
+//DEL 	return Fraction;
+//DEL }
+

@@ -84,15 +84,15 @@ BEGIN
     DEFPUSHBUTTON   "确定",IDOK,178,7,50,14,WS_GROUP
 END
 
-IDD_GOBAND5_DIALOG DIALOGEX 0, 0, 386, 261
+IDD_GOBAND5_DIALOG DIALOGEX 0, 0, 386, 276
 STYLE DS_MODALFRAME | DS_3DLOOK | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | 
     WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "Goband5"
-FONT 14, "宋体", 0, 0, 0x1
+FONT 14, "宋体"
 BEGIN
-    PUSHBUTTON      "悔棋",IDBack,260,240,50,14
-    PUSHBUTTON      "退出",IDCANCEL,329,240,50,14
+    PUSHBUTTON      "悔棋",IDBack,260,255,50,14
+    PUSHBUTTON      "退出",IDCANCEL,329,255,50,14
 END
 
 
@@ -163,29 +163,11 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 379
         TOPMARGIN, 7
-        BOTTOMMARGIN, 254
+        BOTTOMMARGIN, 269
     END
 END
 #endif    // APSTUDIO_INVOKED
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
-
-IDB_BITMAP1             BITMAP  DISCARDABLE     "res\\bitmap1.bmp"
-IDB_BITMAP2             BITMAP  DISCARDABLE     "res\\board.bmp"
-IDB_BITMAP3             BITMAP  DISCARDABLE     "res\\bitmap3.bmp"
-IDB_BITMAP4             BITMAP  DISCARDABLE     "res\\bitmap4.bmp"
-IDB_BITMAP5             BITMAP  DISCARDABLE     "res\\black.bmp"
-IDB_BITMAP6             BITMAP  DISCARDABLE     "res\\未标题-1.bmp"
-IDB_BITMAP7             BITMAP  DISCARDABLE     "res\\white.bmp"
-IDB_BITMAP8             BITMAP  DISCARDABLE     "res\\bitmap8.bmp"
-IDB_BITMAP9             BITMAP  DISCARDABLE     "res\\黑方执子.bmp"
-IDB_BITMAP10            BITMAP  DISCARDABLE     "res\\)@T@3]`F~3]9I[4GFJ_J`}X.bmp"
-IDB_BITMAP11            BITMAP  DISCARDABLE     "res\\896W%_KSHI@RJ`QZX$0}P~.bmp"
-IDB_BITMAP12            BITMAP  DISCARDABLE     "res\\896W%_KSHI@RJ`QZX$0}P~E.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -200,6 +182,15 @@ IDR_JPG1                JPG     DISCARDABLE     "res\\board.jpg"
 //
 
 IDR_PNG1                PNG     DISCARDABLE     "res\\关联规则算法.png"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BITMAP16            BITMAP  DISCARDABLE     "res\\board.bmp"
+IDB_BITMAP17            BITMAP  DISCARDABLE     "res\\timg.bmp"
+IDB_BITMAP18            BITMAP  DISCARDABLE     "res\\bitmap18.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -24,7 +24,11 @@ public:
 	int blackNum;
 	int whiteNum;
 	int count;
-	CGoband5Dlg(CWnd* pParent = NULL);	// standard constructor
+	CGoband5Dlg(CWnd* pParent = NULL);
+	int colorJudge;
+	int blackFrac;
+	int whiteFrac;
+//	bool judge;// standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CGoband5Dlg)
@@ -51,6 +55,7 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnBack();
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
