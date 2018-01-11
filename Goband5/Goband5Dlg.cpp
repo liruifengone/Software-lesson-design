@@ -5,6 +5,10 @@
 #include "Goband5.h"
 #include "Goband5Dlg.h"
 #include <string.h>
+#include "PAGE1.h"
+#include "PAGE2.h"
+#include   <mmsystem.h>   
+#pragma   comment(lib,   "winmm.lib")   
 //#include "cv.h"
 
 #ifdef _DEBUG
@@ -188,89 +192,45 @@ void CGoband5Dlg::OnPaint()
 		//设置背景图形
 		CRect rect;
 		CRect BlackRect;
-	//	CRect WhiteRect;
-	//	CRect BlackFrac;
-	//	CRect WhiteFrac;
-	//	CRect PromptText;
 		CRect BoardRect;
 
 		BlackRect.SetRect(660,30,960,550);
-	//	WhiteRect.SetRect(660,110,810,190);
-	//	BlackFrac.SetRect(810,30,960,110);
-	//	WhiteFrac.SetRect(810,110,960,190);
-	//	PromptText.SetRect(660,190,960,550);
 		BoardRect.SetRect(20,20,640,640);
 		GetClientRect(&rect);
 
-	//	BlackRect.OffsetRect();
-
 		CDC blackBMP;
-	//	CDC whiteBMP;
-	//	CDC BlackFracBMP;
-	//	CDC WhiteFracBMP;
 		CDC dcBMP;
-	//	CDC PromptBMP;
 		CDC BoardBMP;
 
 		dcBMP.CreateCompatibleDC(&dc);
 		blackBMP.CreateCompatibleDC(&dc);
-	//	whiteBMP.CreateCompatibleDC(&dc);
-	//	BlackFracBMP.CreateCompatibleDC(&dc);
-	//	WhiteFracBMP.CreateCompatibleDC(&dc);
-	//	PromptBMP.CreateCompatibleDC(&dc);
 		BoardBMP.CreateCompatibleDC(&dc);
 
 		CBitmap bmpBackground;
-	//	CBitmap whiteback;
 		CBitmap blackback;
-	//	CBitmap blackfracback;
-	//	CBitmap whitefracback;
-	//	CBitmap promptback;
 		CBitmap BoardBack;
 
 		bmpBackground.LoadBitmap(IDB_BITMAP17);
 		blackback.LoadBitmap(IDB_BITMAP18);
-	/*	whiteback.LoadBitmap(IDB_BITMAP13);
-		blackfracback.LoadBitmap(IDB_BITMAP25+blackFrac);
-		whitefracback.LoadBitmap(IDB_BITMAP32+whiteFrac);
-	*/	BoardBack.LoadBitmap(IDB_BITMAP16);
-	//	promptback.LoadBitmap(colorJudge);
-	
+		BoardBack.LoadBitmap(IDB_BITMAP16);
 	
 		
 		BITMAP m_bitmap;
-	//	BITMAP m_white;
 		BITMAP m_black;
-	//	BITMAP m_whitefrac;
-    //	BITMAP m_blackfrac;
-	//	BITMAP m_prompt;
 		BITMAP m_board;
 
 		bmpBackground.GetBitmap(&m_bitmap);
-	//	whiteback.GetBitmap(&m_white);
 		blackback.GetBitmap(&m_black);
-	//	blackfracback.GetBitmap(&m_blackfrac);
-	//	whitefracback.GetBitmap(&m_whitefrac);
-	//	promptback.GetBitmap(&m_prompt);
 		BoardBack.GetBitmap(&m_board);
 
 		CBitmap *pbmpOld = dcBMP.SelectObject(&bmpBackground);
 		CBitmap *pbblack = blackBMP.SelectObject(&blackback);
-	//	CBitmap *pbwhite = whiteBMP.SelectObject(&whiteback);
-	//	CBitmap *pbwhitefrac = WhiteFracBMP.SelectObject(&whitefracback);
-	//	CBitmap *pbblackfrac = BlackFracBMP.SelectObject(&blackfracback);
-	//	CBitmap *pbprompt = PromptBMP.SelectObject(&promptback);
 		CBitmap *pbBoard = BoardBMP.SelectObject(&BoardBack);
 
 		dc.StretchBlt(0,0,rect.Width(),rect.Height(),&dcBMP,0,0,m_bitmap.bmWidth,m_bitmap.bmHeight,SRCCOPY);
 		dc.StretchBlt(660,30,BlackRect.Width(),BlackRect.Height(),&blackBMP,0,0,m_black.bmWidth,m_black.bmHeight,SRCCOPY);
-	//	dc.StretchBlt(660,110,WhiteRect.Width(),WhiteRect.Height(),&whiteBMP,0,0,m_white.bmWidth,m_black.bmHeight,SRCCOPY);
-	//	dc.StretchBlt(660,190,PromptText.Width(),PromptText.Height(),&PromptBMP,0,0,m_prompt.bmWidth,m_prompt.bmHeight,SRCCOPY);
-	//	dc.StretchBlt(810,30,BlackFrac.Width(),BlackFrac.Height(),&BlackFracBMP,0,0,m_blackfrac.bmWidth,m_blackfrac.bmHeight,SRCCOPY);
-	//	dc.StretchBlt(810,110,WhiteFrac.Width(),WhiteFrac.Height(),&WhiteFracBMP,0,0,m_whitefrac.bmWidth,m_whitefrac.bmHeight,SRCCOPY);
 		dc.StretchBlt(20,20,BoardRect.Width(),BoardRect.Height(),&BoardBMP,0,0,m_board.bmWidth,m_board.bmHeight,SRCCOPY);
 		
-		//	dc.StretchBlt(BlackRect.TopLeft().x,WhiteRect.TopLeft().y,WhiteRect.Width(),WhiteRect.Height(),&blackBMP,0,0,m_black.bmWidth,m_black.bmHeight,SRCCOPY);　
 		//画格子
 		dc.MoveTo(30,30);
 		dc.LineTo(30,630);
@@ -310,7 +270,7 @@ void CGoband5Dlg::OnPaint()
 				if(board[i][j]==WHITE){
 					dc.Ellipse(i*40+30-20,j*40+30-20,i*40+30+20,j*40+30+20);
 				}else if(board[i][j]==BLACK){
-					//等待设置画笔颜色与棋子颜色
+					//根据位置设置图形的颜色及位置
 					CBrush *newBrush,*oldBrush;
 					newBrush = new CBrush(RGB(0,0,0));
 					oldBrush = dc.SelectObject(newBrush);
@@ -323,11 +283,11 @@ void CGoband5Dlg::OnPaint()
 				}
 			}
 		}
-		//dc.TextOut(640,10,"hello world");
+		
 		LOGFONT logfont;
 		ZeroMemory(&logfont,sizeof(LOGFONT));
-	//	logfont.lfFaceName = " Synbol ";
-		strcpy(logfont.lfFaceName,"华文隶书");
+
+		strcpy(logfont.lfFaceName,"华文行楷");
 		logfont.lfCharSet = GB2312_CHARSET;
 		logfont.lfHeight = 70;
 		HFONT hFont = CreateFontIndirect(&logfont);
@@ -385,6 +345,8 @@ void CGoband5Dlg::OnLButtonDown(UINT nFlags, CPoint point)
 		{
 			if ((point.x - (i*40+30))*(point.x - (i*40+30))+(point.y-(j*40+30))*(point.y-(j*40+30))<=225)
 			{
+			//	PlaySound("C:\\Users\\11736\\Documents\\Tencent Files\\1173686358\\FileRecv\\Visual C++ 6.0(英文专业安装版) (3)\\VC6\MyProjects\\Goband5\\res\\棋子音效d.mp3",NULL,SND_FILENAME | SND_ASYNC);
+			//	sndPlaySound("res\5390.wav",SND_ASYNC);
 				if (board[i][j]!=0)
 				{
 					Invalidate();
@@ -401,19 +363,9 @@ void CGoband5Dlg::OnLButtonDown(UINT nFlags, CPoint point)
 					if(answer>=5)
 					{
 						blackFrac++;
-						/*int answer = MessageBox("本局比赛黑方胜利,白方是否想要悔棋","战果",MB_YESNOCANCEL);
-						if (answer == IDOK)
-						{
-							if (rank[1][0]!=0 && rank[1][1]!=0)
-							{
-								board[rank[count][0]][rank[count][1]] = 0;
-								rank[count][0] = 0;
-								rank[count][1] = 0;
-								count--;
-							}
-							Invalidate();
-						}else if(answer == IDNO)
-						{*/
+						//弹出提示对话框
+						CPAGE1 page1;
+						page1.DoModal();
 							if (MessageBox("本局比赛黑方胜利，是否要再来一局","系统消息",MB_YESNOCANCEL) == IDYES)
 							{
 								InitBoard();
@@ -440,21 +392,10 @@ void CGoband5Dlg::OnLButtonDown(UINT nFlags, CPoint point)
 					int answer = checkWin(i,j);
 					if (answer>=5)
 					{
-						/*int answer = MessageBox("本局比赛白方胜利，黑方是否想要悔棋","战果",MB_YESNOCANCEL);
-						if (answer == IDOK)
-						{
-							if (rank[1][0]!=0 && rank[1][1]!=0)
-							{
-								board[rank[count][0]][rank[count][1]] = 0;
-								rank[count][0] = 0;
-								rank[count][1] = 0;
-								count--;
-							}
-							InitBoard();
-							Invalidate();
-						}else if(answer == IDNO)
-						*/
+					
 						whiteFrac++;
+						CPAGE2 page2;
+						page2.DoModal();
 							if (MessageBox("本局比赛白方胜利，是否要再来一局","系统消息",MB_YESNOCANCEL) == IDYES)
 							{
 								InitBoard();
@@ -475,20 +416,14 @@ void CGoband5Dlg::OnLButtonDown(UINT nFlags, CPoint point)
 	CDialog::OnLButtonDown(nFlags, point);
 }
 
-//DEL void CGoband5Dlg::OnCancel() 
-//DEL {
-//DEL 	// TODO: Add extra cleanup here
-//DEL 	
-//DEL 	CDialog::OnCancel();
-//DEL }
-
 void CGoband5Dlg::OnBack() 
 {
 	// TODO: Add your control notification handler code here
 	int CHOICE = MessageBox("对方想要悔棋，是否同意","系统消息",MB_YESNOCANCEL);
 	if(CHOICE == IDYES)
 	{
-		if (rank[1][0]!=0 && rank[1][1]!=0 && rank[2][0]!=0 &&rank[2][1]!=0)//判断是否为第一个子，避免程序崩溃
+		//判断是否为第一个子，避免程序崩溃
+		if (rank[1][0]!=0 && rank[1][1]!=0 && rank[2][0]!=0 &&rank[2][1]!=0)	
 		{
 			board[rank[count][0]][rank[count][1]] = 0;
 			board[rank[count-1][0]][rank[count-1][1]] = 0;
@@ -505,31 +440,6 @@ void CGoband5Dlg::OnBack()
 	Invalidate();	
 }
 
-//DEL BOOL CGoband5Dlg::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, CCreateContext* pContext) 
-//DEL {
-//DEL 	// TODO: Add your specialized code here and/or call the base class
-//DEL 	lpszWindowName = ""
-//DEL 	
-//DEL 	return CDialog::Create(IDD, pParentWnd);
-//DEL }
-
-//DEL BOOL CGoband5Dlg::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, CCreateContext* pContext) 
-//DEL {
-//DEL 	// TODO: Add your specialized code here and/or call the base class
-//DEL 	CBitmap bitmap;
-//DEL 	HBITMAP hBmp;
-//DEL 	bitmap.LoadBitmap(IDB_BITMAP5);
-//DEL 	hBmp = (HBITMAP)bitmap.GetSafeHandle();
-//DEL 	
-//DEL 	
-//DEL 	return CDialog::Create(IDD, pParentWnd);
-//DEL }
-
-//DEL int CGoband5Dlg::checkWin()
-//DEL {
-//DEL 
-//DEL }
-
 int CGoband5Dlg::checkWin(int x, int y)
 {//输入最新下的一个点的坐标
 	
@@ -542,33 +452,27 @@ int CGoband5Dlg::checkWin(int x, int y)
 		for (i = x - 1;board[i][y] == board[x][y];i--)
 			total++;
 		maxone = max(maxone,total);
-	//	if (total >= 5) 
-	//		return 1;
-	//	else 
-	//		return 0;//如果左右连续相同的点加起来超过5个则函数值为1，反之为0
+		//如果左右连续相同的点加起来超过5个则函数值为1，反之为0
 		total = 1;
 		for (j = y + 1;board[x][j] == board[x][y];j++)
 			total++;
 		for (j = y - 1;board[x][j] == board[x][y];j--)
 			total++;
-	//	if (total >= 5)
-	//		return 1;//如果上下连续相同的点加起来超过5个则函数值为1
+		//如果上下连续相同的点加起来超过5个则函数值为1
 		maxone = max(maxone,total);
 		total = 1;
 		for (i = x + 1,j = y + 1;board[i][j] == board[x][y];i++,j++)
 			total++;
 		for (i = x - 1,j = y - 1;board[i][j] == board[x][y];i--,j--)
 			total++;
-	//	if (total >= 5) 
-	//		return 1;//如果y=x方向连续相同的点加起来超过5个则函数值为1
+		//如果y=x方向连续相同的点加起来超过5个则函数值为1
 		maxone = max(maxone,total);
 		total = 1;
 		for (i = x + 1, j = y - 1;board[i][j] == board[x][y];i++, j--)
 			total++;
 		for (i = x - 1, j = y + 1;board[i][j] == board[x][y];i--, j++)
 			total++;
-	//	if (total >= 5)
-	//		return 1;//如果y=-x方向连续相同的点加起来超过5个则函数值为1
+		//如果y=-x方向连续相同的点加起来超过5个则函数值为1
 		maxone = max(maxone,total);
 		return maxone;
 
@@ -595,6 +499,7 @@ void CGoband5Dlg::InitBoard()
 	count = 0;	
 }
 
+
 //DEL void CGoband5Dlg::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) 
 //DEL {
 //DEL 	// TODO: Add your message handler code here and/or call default
@@ -613,6 +518,8 @@ void CGoband5Dlg::InitBoard()
 //DEL 	}
 //DEL }
 
+
+//此处尝试写AI失败，以下内容已全部注释掉。不必翻
 //DEL int CGoband5Dlg::AICalculate(int x, int y)
 //DEL {
 //DEL 

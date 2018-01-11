@@ -61,15 +61,6 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDR_MAINFRAME           ICON    DISCARDABLE     "res\\Goband5.ico"
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // Dialog
 //
 
@@ -93,6 +84,20 @@ FONT 14, "宋体"
 BEGIN
     PUSHBUTTON      "悔棋",IDBack,260,255,50,14
     PUSHBUTTON      "退出",IDCANCEL,329,255,50,14
+END
+
+PAGE1 DIALOG DISCARDABLE  0, 0, 187, 96
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 10, "System"
+BEGIN
+END
+
+PAGE2 DIALOG DISCARDABLE  0, 0, 187, 96
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 10, "System"
+BEGIN
 END
 
 
@@ -165,6 +170,22 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 269
     END
+
+    PAGE1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 89
+    END
+
+    PAGE2, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 89
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -191,6 +212,25 @@ IDR_PNG1                PNG     DISCARDABLE     "res\\关联规则算法.png"
 IDB_BITMAP16            BITMAP  DISCARDABLE     "res\\board.bmp"
 IDB_BITMAP17            BITMAP  DISCARDABLE     "res\\timg.bmp"
 IDB_BITMAP18            BITMAP  DISCARDABLE     "res\\bitmap18.bmp"
+IDB_BITMAP13            BITMAP  DISCARDABLE     "res\\Goband5.ico"
+IDB_BITMAP14            BITMAP  DISCARDABLE     "res\\未标题-1.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\icon1.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// WAVE
+//
+
+IDR_WAVE1               WAVE    DISCARDABLE     "res\\5390.wav"
+IDR_WAVE2               WAVE    DISCARDABLE     "res\\棋子音效d.mp3"
 
 /////////////////////////////////////////////////////////////////////////////
 //

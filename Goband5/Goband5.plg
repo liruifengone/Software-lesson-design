@@ -6,13 +6,23 @@
 --------------------Configuration: Goband5 - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\11736\AppData\Local\Temp\RSPC19A.tmp" with contents
+Creating temporary file "C:\Users\11736\AppData\Local\Temp\RSP9A82.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/Goband5.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
 "C:\Users\11736\Documents\Tencent Files\1173686358\FileRecv\Visual C++ 6.0(英文专业安装版) (3)\VC6\MyProjects\Goband5\Goband5Dlg.cpp"
 ]
-Creating command line "cl.exe @C:\Users\11736\AppData\Local\Temp\RSPC19A.tmp" 
-Creating command line "link.exe /nologo /subsystem:windows /incremental:yes /pdb:"Debug/Goband5.pdb" /debug /machine:I386 /out:"Debug/Goband5.exe" /pdbtype:sept  ".\Debug\Goband5.obj" ".\Debug\Goband5Dlg.obj" ".\Debug\StdAfx.obj" ".\Debug\Goband5.res" "
+Creating command line "cl.exe @C:\Users\11736\AppData\Local\Temp\RSP9A82.tmp" 
+Creating temporary file "C:\Users\11736\AppData\Local\Temp\RSP9A83.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"Debug/Goband5.pdb" /debug /machine:I386 /out:"Debug/Goband5.exe" /pdbtype:sept 
+".\Debug\Goband5.obj"
+".\Debug\Goband5Dlg.obj"
+".\Debug\PAGE1.obj"
+".\Debug\PAGE2.obj"
+".\Debug\StdAfx.obj"
+".\Debug\Goband5.res"
+]
+Creating command line "link.exe @C:\Users\11736\AppData\Local\Temp\RSP9A83.tmp"
 <h3>Output Window</h3>
 Compiling...
 Goband5Dlg.cpp

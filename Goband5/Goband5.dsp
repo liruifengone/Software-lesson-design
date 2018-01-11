@@ -102,6 +102,14 @@ SOURCE=.\Goband5Dlg.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\PAGE1.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\PAGE2.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
 # End Source File
@@ -116,6 +124,14 @@ SOURCE=.\Goband5.h
 # Begin Source File
 
 SOURCE=.\Goband5Dlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\PAGE1.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\PAGE2.h
 # End Source File
 # Begin Source File
 
@@ -231,6 +247,10 @@ SOURCE=.\res\Goband5.rc2
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\icon1.ico
+# End Source File
+# Begin Source File
+
 SOURCE=".\res\QQ图片20180102231619.bmp"
 # End Source File
 # Begin Source File
@@ -277,7 +297,15 @@ SOURCE=".\res\黑方执子.bmp"
 
 SOURCE=".\res\未标题-1.bmp"
 # End Source File
+# Begin Source File
+
+SOURCE=".\res\未标题-1.ico"
+# End Source File
 # End Group
+# Begin Source File
+
+SOURCE=.\res\5390.wav
+# End Source File
 # Begin Source File
 
 SOURCE=.\ReadMe.txt
@@ -285,6 +313,10 @@ SOURCE=.\ReadMe.txt
 # Begin Source File
 
 SOURCE=".\res\关联规则算法.png"
+# End Source File
+# Begin Source File
+
+SOURCE=".\res\棋子音效d.mp3"
 # End Source File
 # End Target
 # End Project
